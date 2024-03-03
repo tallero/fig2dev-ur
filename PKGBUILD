@@ -8,16 +8,20 @@ pkgrel=1
 pkgdesc="Format conversion utility that can be used with xfig"
 arch=('x86_64')
 url="http://mcj.sourceforge.net/"
-license=('custom')
+license=(Xfig)
 depends=('libpng' 'libxpm' 'bc' 'netpbm' 'ghostscript')
 makedepends=()
 conflicts=('transfig')
 replaces=('transfig')
 provides=('transfig')
-source=("https://downloads.sourceforge.net/mcj/${pkgname}-${_upstreamver}.tar.xz"
-        "LICENSE")
-sha256sums=('418a164aa9fad72d25bb4fec8d7b452fe3a2f12f990cf22e05c0eb16cecb68cb'
-            'e7b5050c353602ff95c6baefea92eebabacbd90b8538495438c574f85c7f7514')
+options=(!lto)
+source=("https://downloads.sourceforge.net/mcj/${pkgname}-${_upstreamver}.tar.xz")
+sha256sums=('418a164aa9fad72d25bb4fec8d7b452fe3a2f12f990cf22e05c0eb16cecb68cb')
+
+prepare() {
+  # extract license file from sources
+  sed -n '1,17p' $pkgname-$_upstreamver/$pkgname/alloc.h > Xfig.txt
+}
 
 build() {
   cd "${pkgname}-${_upstreamver}"
@@ -35,5 +39,5 @@ package() {
   make DESTDIR="${pkgdir}" XFIGLIBDIR=/usr/share/xfig \
     FIG2DEV_LIBDIR=/usr/share/fig2dev MANPATH=/usr/share/man \
     install
-  install -Dm644 ../LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 ../Xfig.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
