@@ -1,4 +1,5 @@
 # Maintainer: Konstantin Gizdov <arch at kge dot pw>
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
 # Controbutor: Baptiste Jonglez <archlinux at bitsofnetworks dot org>
 
 pkgname=fig2dev
