@@ -34,12 +34,57 @@
 #   Baptiste Jonglez
 #     <archlinux at bitsofnetworks dot org>
 
+if [[ ! -v "_os" ]]; then
+  _os="$(
+    uname \
+      -o)"
+fi
+if [[ "${_os}" == "Android" ]]; then
+  _libc="ndk-sysroot"
+  _compiler="clang"
+  _libcompiler="libllvm"
+  _sh="dash"
+elif [[ "${_os}" == "GNU/Linux" ]]; then
+  _libc="glibc"
+  _compiler="gcc"
+  _libcompiler="libgcc"
+  _sh="sh"
+elif [[ "${_os}" == "Msys" ]]; then
+  _libc="msys2-w32api-runtime"
+  _libc_headers="msys2-w32api-headers"
+  _compiler="gcc"
+  _libcompiler="gcc-libs"
+  _sh="sh"
+else
+  _msg=(
+    "Unknown os '${_os}'."
+  )
+  msg \
+    "${_msg[*]}"
+  _libc="msys2-w32api-runtime"
+  _libc_headers="msys2-w32api-headers"
+  _compiler="gcc"
+  _libcompiler="gcc-libs"
+  _sh="sh"
+fi
+_evmfs_available="$(
+  command \
+    -v \
+    "evmfs" || \
+    true)"
+if [[ ! -v "_evmfs" ]]; then
+  if [[ "${_evmfs_available}" != "" ]]; then
+    _evmfs="true"
+  elif [[ "${_evmfs_available}" == "" ]]; then
+    _evmfs="false"
+  fi
+fi
 pkgbase=fig2dev
 pkgname=(
   "fig2dev"
 )
 pkgver=3.2.9
-pkgrel=1
+pkgrel=2
 pkgdesc="Format conversion utility that can be used with xfig"
 arch=(
   'aarch64'
@@ -60,13 +105,17 @@ depends=(
   'bash'
   'bc'
   'ghostscript'
-  'glibc'
+  "${_libc}"
   'libpng'
   'libxpm'
   'netpbm'
   'zlib'
 )
 makedepends=()
+if [[ "${_os}" == "Msys" ]]; then
+  makedepends+=(
+  )
+fi
 conflicts=(
   'transfig'
 )
