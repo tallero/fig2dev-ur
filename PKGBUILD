@@ -84,7 +84,7 @@ pkgname=(
   "fig2dev"
 )
 pkgver=3.2.9
-pkgrel=2
+pkgrel=3
 pkgdesc="Format conversion utility that can be used with xfig"
 arch=(
   'aarch64'
@@ -111,7 +111,9 @@ depends=(
   'netpbm'
   'zlib'
 )
-makedepends=()
+makedepends=(
+  "${_compiler}"
+)
 if [[ "${_os}" == "Msys" ]]; then
   makedepends+=(
   )
